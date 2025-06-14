@@ -12,7 +12,7 @@ use Inertia\Inertia;
 
 //ini buat Home 
 Route::get('/', function () {
-    return Inertia::render('Welcome');
+    return Inertia::render('index');
 });
 
 // ini dashboard
