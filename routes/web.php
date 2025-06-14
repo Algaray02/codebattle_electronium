@@ -15,6 +15,38 @@ Route::get('/', function () {
     return Inertia::render('index');
 });
 
+Route::get('/dashboard', function () {
+    return Inertia::render('dashboard/index');
+});
+
+Route::get('/result', function () {
+    return Inertia::render('result/index');
+});
+
+Route::get('/battle', function () {
+    return Inertia::render('battle/index');
+});
+
+Route::get('/profile', function () {
+    return Inertia::render('profile/index');
+});
+
+Route::get('/leaderboard', function () {
+    return Inertia::render('leaderboard/index');
+});
+
+Route::get('/admin', function () {
+    return Inertia::render('admin/index');
+});
+
+Route::get('/auth/login', function () {
+    return Inertia::render('auth/login/index');
+});
+
+Route::get('/auth/register', function () {
+    return Inertia::render('auth/register/index');
+});
+
 // ini dashboard
 Route::get('/dashboard', function () {
     return Inertia::render('Dahboard');

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
 import { ArrowRight, Code, Trophy, Users, Zap, Star, Crown } from "lucide-react"
-import Navbar from "@/Components/fragments/navbar"
-import { Button } from "@/Components/ui/button"
+import Navbar from "@/components/fragments/navbar"
+import { Button } from "@/components/ui/button"
 import { Link } from "@inertiajs/react"
 
 export default function HomePage() {
