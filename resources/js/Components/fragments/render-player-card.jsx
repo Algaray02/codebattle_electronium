@@ -54,10 +54,7 @@ export default function renderPlayerCard(player, index, user) {
                                     <span className="ml-2 text-xs bg-purple-600 px-2 py-1 rounded-full">You</span>
                                 )}
                             </h3>
-                            <div className="flex items-center space-x-4 text-sm text-gray-400">
-                                <span>{player.battlesWon} wins</span>
-                                <span>{player.winRate}% win rate</span>
-                            </div>
+                            <span className="text-gray-400 text-sm">{player.matches} matches</span>
                         </div>
                     </div>
                 </div>

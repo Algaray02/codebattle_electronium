@@ -7,29 +7,34 @@ import renderPlayerCard from "@/components/fragments/render-player-card"
 
 // Mock user data
 const user = {
-    name: "Alex Johnson",
-    points: 475,
-    rank: "Epic",
+    name: "ClassyCoder",
+    points: 360,
+    rank: "Master",
 }
 
 // Mock leaderboard data
 const leaderboard = [
-    { id: 1, name: "CodeMaster2024", points: 2150, rank: "Immortal", battlesWon: 89, winRate: 92 },
-    { id: 2, name: "AlgoNinja", points: 1850, rank: "Glory", battlesWon: 76, winRate: 88 },
-    { id: 3, name: "ByteWarrior", points: 1650, rank: "Glory", battlesWon: 68, winRate: 85 },
-    { id: 4, name: "StackOverflow", points: 1420, rank: "Honor", battlesWon: 62, winRate: 82 },
-    { id: 5, name: "DevGuru", points: 1280, rank: "Honor", battlesWon: 58, winRate: 79 },
-    { id: 6, name: "CodeCrusher", points: 1150, rank: "Honor", battlesWon: 54, winRate: 76 },
-    { id: 7, name: "BugHunter", points: 980, rank: "Legend", battlesWon: 48, winRate: 73 },
-    { id: 8, name: "SyntaxSage", points: 850, rank: "Legend", battlesWon: 42, winRate: 70 },
-    { id: 9, name: "LogicLord", points: 720, rank: "Legend", battlesWon: 38, winRate: 67 },
-    { id: 10, name: "Alex Johnson", points: 475, rank: "Epic", battlesWon: 23, winRate: 74 },
+    { id: 1, name: "CodeMaster2024", points: 2150, rank: "Immortal", matches: 89, avgPoints: 24.2 },
+    { id: 2, name: "AlgoNinja", points: 1850, rank: "Glory", matches: 76, avgPoints: 24.3 },
+    { id: 3, name: "ByteWarrior", points: 1650, rank: "Glory", matches: 68, avgPoints: 24.3 },
+    { id: 4, name: "StackOverflow", points: 1420, rank: "Honor", matches: 62, avgPoints: 22.9 },
+    { id: 5, name: "DevGuru", points: 1280, rank: "Honor", matches: 58, avgPoints: 22.1 },
+    { id: 6, name: "CodeCrusher", points: 1150, rank: "Honor", matches: 54, avgPoints: 21.3 },
+    { id: 7, name: "BugHunter", points: 980, rank: "Legend", matches: 48, avgPoints: 20.4 },
+    { id: 8, name: "SyntaxSage", points: 850, rank: "Legend", matches: 42, avgPoints: 20.2 },
+    { id: 9, name: "LogicLord", points: 720, rank: "Legend", matches: 38, avgPoints: 18.9 },
+    { id: 10, name: "Alex Johnson", points: 475, rank: "Epic", matches: 23, avgPoints: 20.7 },
+    { id: 11, name: "TechTitan", points: 430, rank: "Epic", matches: 22, avgPoints: 19.5 },
+    { id: 12, name: "FunctionFreak", points: 410, rank: "Epic", matches: 20, avgPoints: 20.5 },
+    { id: 13, name: "BinaryBoss", points: 390, rank: "Master", matches: 20, avgPoints: 19.5 },
+    { id: 14, name: "RecursionRuler", points: 370, rank: "Master", matches: 19, avgPoints: 19.4 },
+    { id: 15, name: "ClassyCoder", points: 360, rank: "Master", matches: 18, avgPoints: 20.0 },
 ]
 
 // Mock top performers data
 const topPerformers = [
-    { title: "Most Battles Won", player: "CodeMaster2024", value: "89 wins", icon: Trophy },
-    { title: "Highest Win Rate", player: "CodeMaster2024", value: "92%", icon: TrendingUp },
+    { title: "Most Matches", player: "CodeMaster2024", value: "89 matches", icon: Trophy },
+    { title: "Highest Points", player: "CodeMaster2024", value: "2150 pts", icon: TrendingUp },
     { title: "Rising Star", player: "ByteWarrior", value: "+150 pts this week", icon: Award },
 ]
 
@@ -59,16 +64,27 @@ export default function LeaderboardPage() {
                         {topPerformers.map((performer, index) => (
                             <motion.div
                                 key={performer.title}
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.8, delay: index * 0.1 }}
+                                whileHover={{ scale: 1.03, y: -5 }}
+                                transition={{ duration: 0.6, ease: 'easeOut', delay: index * 0.15 }}
                             >
-                                <Card className="bg-gradient-to-r from-purple-900/20 to-pink-900/20 border-purple-500/30">
-                                    <CardContent className="p-6 text-center">
-                                        <performer.icon className="h-8 w-8 text-purple-400 mx-auto mb-2" />
-                                        <h3 className="font-semibold mb-1">{performer.title}</h3>
-                                        <p className="text-purple-300 font-medium">{performer.player}</p>
-                                        <p className="text-gray-400 text-sm">{performer.value}</p>
+                                <Card className="bg-gradient-to-br from-purple-900/10 to-pink-900/10 backdrop-blur-md border border-purple-500/20 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                                    <CardContent className="p-6 text-center space-y-3">
+                                        <div className=" flex justify-center">
+                                            <performer.icon
+                                                className="h-10 w-10 text-purple-400 transition-transform duration-300 group-hover:scale-110"
+                                            />
+                                        </div>
+                                        <h3 className="text-lg font-bold text-purple-200 tracking-tight">
+                                            {performer.title}
+                                        </h3>
+                                        <p className="text-sm font-medium text-purple-300">
+                                            {performer.player}
+                                        </p>
+                                        <p className="text-xs text-gray-300 opacity-80">
+                                            {performer.value}
+                                        </p>
                                     </CardContent>
                                 </Card>
                             </motion.div>
@@ -84,7 +100,9 @@ export default function LeaderboardPage() {
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4">
-                                {leaderboard.map((player, index) => renderPlayerCard(player, index, user))}
+                                {leaderboard.slice(0, 10).map((player, index) =>
+                                    renderPlayerCard(player, index, user)
+                                )}
                             </div>
                         </CardContent>
                     </Card>
@@ -108,7 +126,7 @@ export default function LeaderboardPage() {
                                                 <div>
                                                     <h3 className="font-semibold text-purple-300">{user.name} (You)</h3>
                                                     <div className="text-sm text-gray-400">
-                                                        {user.battlesWon} wins • {user.winRate}% win rate
+                                                        {user.matches} matches
                                                     </div>
                                                 </div>
                                             </div>
