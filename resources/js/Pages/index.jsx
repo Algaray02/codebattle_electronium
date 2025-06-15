@@ -66,7 +66,7 @@ export default function HomePage() {
                             <Link href="/register">
                                 <Button
                                     size="lg"
-                                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 transition-all duration-300 ease-in-out hover:shadow-lg hover:scale-105"
+                                    className="font-bold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 transition-all duration-300 ease-in-out hover:shadow-lg hover:scale-105"
                                 >
                                     Start Battling
                                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -75,9 +75,9 @@ export default function HomePage() {
                             <Link href="/login">
                                 <Button
                                     size="lg"
-                                    className="bg-gradient-to-r from-pink-500 to-fuchsia-500 hover:from-pink-600 hover:to-fuchsia-600 text-white px-8 py-3 border-none transition-all duration-300 ease-in-out hover:shadow-lg hover:scale-105"
+                                    className="font-bold bg-gradient-to-r from-pink-500 to-fuchsia-500 hover:from-pink-600 hover:to-fuchsia-600 text-white px-8 py-3 border-none transition-all duration-300 ease-in-out hover:shadow-lg hover:scale-105"
                                 >
-                                    Login
+                                    Sign In
                                     <ArrowRight className="ml-2 h-5 w-5" />
                                 </Button>
                             </Link>
