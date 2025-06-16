@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import { ArrowRight, Code, Trophy, Users, Zap, Star, Crown } from "lucide-react"
+import { ArrowRight, Code, Trophy, Users, Zap, Star, Crown, Award, Flame, Gem, Infinity } from "lucide-react"
 import Navbar from "@/components/fragments/navbar"
 import { Button } from "@/components/ui/button"
 import { Link } from "@inertiajs/react"
@@ -29,14 +29,70 @@ export default function HomePage() {
     ]
 
     const ranks = [
-        { name: "Bronze", points: "0+", color: "from-amber-600 to-amber-800" },
-        { name: "Silver", points: "100+", color: "from-gray-400 to-gray-600" },
-        { name: "Master", points: "200+", color: "from-blue-400 to-blue-600" },
-        { name: "Epic", points: "400+", color: "from-purple-400 to-purple-600" },
-        { name: "Legend", points: "700+", color: "from-red-400 to-red-600" },
-        { name: "Honor", points: "1000+", color: "from-green-400 to-green-600" },
-        { name: "Glory", points: "1500+", color: "from-yellow-400 to-yellow-600" },
-        { name: "Immortal", points: "2000+", color: "from-pink-400 to-purple-600" },
+        {
+            name: "Bronze",
+            points: "0+",
+            color: "from-amber-600 to-amber-800",
+            icon: Award,
+            bg: "bg-amber-900/20",
+            text: "text-amber-500"
+        },
+        {
+            name: "Silver",
+            points: "100+",
+            color: "from-gray-400 to-gray-600",
+            icon: Star,
+            bg: "bg-gray-900/20",
+            text: "text-gray-500"
+        },
+        {
+            name: "Master",
+            points: "200+",
+            color: "from-blue-400 to-blue-600",
+            icon: Zap,
+            bg: "bg-blue-900/20",
+            text: "text-blue-500"
+        },
+        {
+            name: "Epic",
+            points: "400+",
+            color: "from-purple-400 to-purple-600",
+            icon: Flame,
+            bg: "bg-purple-900/20",
+            text: "text-purple-500"
+        },
+        {
+            name: "Legend",
+            points: "700+",
+            color: "from-red-400 to-red-600",
+            icon: Crown,
+            bg: "bg-red-900/20",
+            text: "text-red-500"
+        },
+        {
+            name: "Honor",
+            points: "1000+",
+            color: "from-green-400 to-green-600",
+            icon: Gem,
+            bg: "bg-green-900/20",
+            text: "text-green-500"
+        },
+        {
+            name: "Glory",
+            points: "1500+",
+            color: "from-yellow-400 to-yellow-600",
+            icon: Trophy,
+            bg: "bg-yellow-900/20",
+            text: "text-yellow-500"
+        },
+        {
+            name: "Immortal",
+            points: "2000+",
+            color: "from-pink-400 to-purple-600",
+            icon: Infinity,
+            bg: "bg-gradient-to-r from-pink-900/20 to-purple-900/20",
+            text: "text-pink-500"
+        }
     ]
 
     return (
@@ -139,29 +195,30 @@ export default function HomePage() {
                     </motion.div>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-                        {ranks.map((rank, index) => (
-                            <motion.div
-                                key={rank.name}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                                className="text-center p-4 bg-gray-800/50 rounded-lg border border-gray-700"
-                            >
-                                <div
-                                    className={`w-12 h-12 mx-auto mb-2 rounded-full bg-gradient-to-r ${rank.color} flex items-center justify-center`}
+                        {ranks.map((rank, index) => {
+                            const Icon = rank.icon
+                            console.log(Icon)
+                            return (
+                                <motion.div
+                                    key={rank.name}
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    transition={{ duration: 0.5, delay: 0.1 }}
+                                    whileHover={{ scale: 1.03, y: -5 }}
+                                    className="text-center p-4 bg-gray-800/50 rounded-lg border border-gray-700"
                                 >
-                                    {index === ranks.length - 1 ? (
-                                        <Crown className="h-6 w-6 text-white" />
-                                    ) : (
-                                        <Star className="h-6 w-6 text-white" />
-                                    )}
-                                </div>
-                                <h3 className={`font-semibold bg-gradient-to-r ${rank.color} bg-clip-text text-transparent`}>
-                                    {rank.name}
-                                </h3>
-                                <p className="text-sm text-gray-400">{rank.points} pts</p>
-                            </motion.div>
-                        ))}
+                                    <div
+                                        className={`w-12 h-12 mx-auto mb-2 rounded-full ${rank.bg} border border-gray-700 flex items-center justify-center`}
+                                    >
+                                        <Icon className={`h-4 w-4 bg-gradient-to-r ${rank.color} bg-clip-text ${rank.text}`} />
+                                    </div>
+                                    <h3 className={`font-semibold bg-gradient-to-r ${rank.color} bg-clip-text text-transparent`}>
+                                        {rank.name}
+                                    </h3>
+                                    <p className="text-sm text-gray-400">{rank.points} pts</p>
+                                </motion.div>
+                            )
+                        })}
                     </div>
                 </div>
             </section>

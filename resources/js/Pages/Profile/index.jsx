@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import { Calendar, Trophy, Target, TrendingUp, Clock, Code, Award } from "lucide-react"
+import { Calendar, Trophy, Target, TrendingUp, Clock, Code, Award, Swords, Crown } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Navbar from "@/components/fragments/navbar"
 import { RankBadge } from "@/components/fragments/rank-badge"
@@ -8,15 +8,15 @@ import LanguageStatCard from "@/components/fragments/language-stat-card"
 
 // Mock user data
 const user = {
-    name: "Alex Johnson",
-    email: "alex.johnson@example.com",
+    name: "King Akbar",
+    email: "akbar.king@example.com",
     points: 475,
     rank: "Epic",
     joinDate: "2024-01-01",
-    battlesWon: 23,
+    totalMatches: 23,
     battlesTotal: 31,
     winRate: 74,
-    streak: 5,
+    highestRank: "Legend",
     favoriteLanguage: "JavaScript",
     totalTimeSpent: "24h 32m",
 }
@@ -85,30 +85,20 @@ const battleHistory = [
     },
 ]
 
-// Mock achievements data
-const achievements = [
-    { title: "First Victory", description: "Won your first battle", icon: Trophy, earned: true },
-    { title: "Speed Demon", description: "Solved a problem in under 5 minutes", icon: Clock, earned: true },
-    { title: "Perfectionist", description: "Got 100% on 5 problems", icon: Target, earned: true },
-    { title: "Polyglot", description: "Solved problems in 3+ languages", icon: Code, earned: true },
-    { title: "Streak Master", description: "Win 10 battles in a row", icon: TrendingUp, earned: false },
-    { title: "Legend", description: "Reach Legend rank", icon: Award, earned: false },
-]
-
 // Mock language stats data
 const languageStats = [
-    { language: "JavaScript", battles: 12, winRate: 83, color: "bg-yellow-500" },
-    { language: "Python", battles: 8, winRate: 75, color: "bg-blue-500" },
-    { language: "Java", battles: 6, winRate: 67, color: "bg-red-500" },
-    { language: "C++", battles: 5, winRate: 60, color: "bg-purple-500" },
+    { language: "JavaScript", battles: 12, totalPoint: 83, color: "bg-yellow-500" },
+    { language: "Python", battles: 8, totalPoint: 75, color: "bg-blue-500" },
+    { language: "Java", battles: 6, totalPoint: 67, color: "bg-red-500" },
+    { language: "C++", battles: 5, totalPoint: 60, color: "bg-purple-500" },
 ]
 
 export default function ProfilePage() {
     const stats = [
         { label: "Total Points", value: user.points, icon: Trophy, color: "text-yellow-400" },
-        { label: "Battles Won", value: user.battlesWon, icon: Target, color: "text-green-400" },
-        { label: "Win Rate", value: `${user.winRate}%`, icon: TrendingUp, color: "text-blue-400" },
-        { label: "Current Streak", value: user.streak, icon: Calendar, color: "text-purple-400" },
+        { label: "Total Matches", value: user.totalMatches, icon: Swords, color: "text-green-400" },
+        { label: "Favorite Language", value: user.favoriteLanguage, icon: Code, color: "text-blue-400" },
+        { label: "Highest Rank", value: user.highestRank, icon: Crown, color: "text-orange-400" },
     ]
 
     const getInitials = (name) =>
@@ -200,7 +190,7 @@ export default function ProfilePage() {
                             >
                                 <Card className="bg-gray-900/50 border-gray-700">
                                     <CardHeader>
-                                        <CardTitle className="flex items-center">
+                                        <CardTitle className="flex items-center text-blue-400">
                                             <Code className="mr-2 h-5 w-5" />
                                             Language Stats
                                         </CardTitle>
