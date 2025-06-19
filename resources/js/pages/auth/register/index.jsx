@@ -15,7 +15,6 @@ const registerSchema = z
         email: z.string().email("Invalid email address"),
         password: z.string().min(6, "Password must be at least 6 characters"),
         confirmPassword: z.string(),
-        terms: z.literal(true, { message: "You must agree to the terms" }),
     })
     .refine((data) => data.password === data.confirmPassword, {
         message: "Passwords don't match",
@@ -33,7 +32,6 @@ export default function RegisterPage() {
         formState: { errors },
     } = useForm({
         resolver: zodResolver(registerSchema),
-        defaultValues: { terms: false },
     })
 
     const onSubmit = async (data) => {
