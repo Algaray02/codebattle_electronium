@@ -14,14 +14,13 @@ class AuthController extends Controller
         $credentials = $request->validated();
 
         // Cek hanya pakai email
-        $user = User::where('email', $credentials['login'])->first();
+        $user = User::where('email', $credentials['email'])->first();
 
         if ($user && password_verify($credentials['password'], $user->password)) {
             auth()->login($user);
             $request->session()->regenerate();
             return redirect()->intended('/dashboard'); // Arahkan ke halaman utama atau dashboard
         }
-
         return back()->with('error', 'Login gagal, pastikan email dan password benar.');
     }
 

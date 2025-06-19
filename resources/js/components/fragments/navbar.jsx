@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "@inertiajs/react";
 import { Menu, X, Sword, Trophy, User, LogOut } from "lucide-react";
 import { Button } from "../ui/button";
+import { Inertia } from "@inertiajs/inertia";
 
 export default function Navbar({ user }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -41,23 +43,38 @@ export default function Navbar({ user }) {
                                 ))}
                                 <div className="flex items-center space-x-4">
                                     <div className="text-sm">
-                                        <div className="text-gray-300">{user.name}</div>
+                                        <div className="text-gray-300">
+                                            {user.name}
+                                        </div>
                                         <div className="text-purple-400">
                                             {user.points} pts • {user.rank}
                                         </div>
                                     </div>
-                                    <Button variant="ghost" size="sm">
+                                    {/* <Button
+                                        onClick={() => {
+                                            Inertia.get("/auth/logout");
+                                        }}
+                                        variant="ghost"
+                                        size="sm"
+                                    >
                                         <LogOut className="h-4 w-4" />
-                                    </Button>
+                                    </Button> */}
+                                    <Link href={route("auth.logout")}>
+                                        <LogOut className="h-4 w-4" />
+                                    </Link>
                                 </div>
                             </>
                         ) : (
                             <div className="flex items-center space-x-4">
-                                <a href="/login">
-                                    <Button className="bg-pink-600 hover:bg-pink-700 hover:scale-105 transition-all duration-300">Login</Button>
+                                <a href="/auth/login">
+                                    <Button className="bg-pink-600 hover:bg-pink-700 hover:scale-105 transition-all duration-300">
+                                        Login
+                                    </Button>
                                 </a>
-                                <a href="/register">
-                                    <Button className="bg-purple-600 hover:bg-purple-700 hover:scale-105 transition-all duration-300">Sign Up</Button>
+                                <a href="/auth/register">
+                                    <Button className="bg-purple-600 hover:bg-purple-700 hover:scale-105 transition-all duration-300">
+                                        Sign Up
+                                    </Button>
                                 </a>
                             </div>
                         )}
@@ -65,8 +82,16 @@ export default function Navbar({ user }) {
 
                     {/* Mobile menu */}
                     <div className="md:hidden flex items-center">
-                        <Button variant="ghost" size="sm" onClick={() => setIsOpen(!isOpen)}>
-                            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setIsOpen(!isOpen)}
+                        >
+                            {isOpen ? (
+                                <X className="h-6 w-6" />
+                            ) : (
+                                <Menu className="h-6 w-6" />
+                            )}
                         </Button>
                     </div>
                 </div>
@@ -94,7 +119,9 @@ export default function Navbar({ user }) {
                                     </a>
                                 ))}
                                 <div className="px-3 py-2 border-t border-gray-800 mt-2">
-                                    <div className="text-sm text-gray-300">{user.name}</div>
+                                    <div className="text-sm text-gray-300">
+                                        {user.name}
+                                    </div>
                                     <div className="text-sm text-purple-400">
                                         {user.points} pts • {user.rank}
                                     </div>
@@ -103,13 +130,13 @@ export default function Navbar({ user }) {
                         ) : (
                             <>
                                 <a
-                                    href="/login"
+                                    href="/auth/login"
                                     className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md"
                                 >
                                     Login
                                 </a>
                                 <a
-                                    href="/register"
+                                    href="/auth/register"
                                     className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md"
                                 >
                                     Sign Up
@@ -121,4 +148,4 @@ export default function Navbar({ user }) {
             )}
         </nav>
     );
-};
+}

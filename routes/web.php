@@ -15,8 +15,8 @@ Route::middleware('guest')
     ->prefix('auth')
     ->name('auth.')
     ->group(function () {
-        Route::inertia('/login', 'Auth/Login/index')->name('login.form');  // GET /auth/login untuk form
-        Route::inertia('/register', 'Auth/Register/index')->name('register.form'); // GET /auth/register untuk form
+        Route::inertia('/login', 'auth/login/index')->name('login.form');  // GET /auth/login untuk form
+        Route::inertia('/register', 'auth/register/index')->name('register.form'); // GET /auth/register untuk form
         Route::post('/login', [AuthController::class, 'login'])->name('login');  // POST /auth/login untuk proses
         Route::post('/register', [AuthController::class, 'register'])->name('register'); // POST /auth/register untuk proses
     });
@@ -34,7 +34,7 @@ Route::get('/', function () {
 
 // ini dashboard
 Route::get('/dashboard', function () {
-    return Inertia::render('Dahboard');
+    return Inertia::render('dashboard/index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // use middleware khusus untuk role superAdmin dan admin
