@@ -1,68 +1,136 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "@inertiajs/react";
-import { Menu, X, Sword, Trophy, User, LogOut } from "lucide-react";
-import { Button } from "../ui/button";
-import { Inertia } from "@inertiajs/inertia";
+import { Menu, X, Sword, Trophy, User, LogOut, Wand2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import EditProfileDialog from "@/components/fragments/edit-profile-dialog";
 
 export default function Navbar({ user }) {
     const [isOpen, setIsOpen] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
 
     const navItems = [
-        { href: "/dashboard", label: "Dashboard", icon: User },
         { href: "/battle", label: "Battle Arena", icon: Sword },
         { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
     ];
 
+    const navItemsAdmin = [
+        { href: "/admin", label: "Dashboard", icon: User },
+        { href: "/make/question", label: "Create Question", icon: Wand2 },
+        { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
+    ];
+
+    const getInitials = (name) =>
+        name
+            .split(" ")
+            .map((n) => n[0])
+            .join("");
+
     return (
         <nav className="bg-gray-900/50 backdrop-blur-lg border-b border-gray-800 sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16">
-                    <div className="flex items-center">
-                        <a href="/" className="flex items-center space-x-2">
-                            <Sword className="h-8 w-8 text-purple-500" />
-                            <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                                Code Battle
-                            </span>
-                        </a>
-                    </div>
+                <div className="flex justify-between h-16 items-center">
+                    <a href="/" className="flex items-center space-x-2">
+                        <Sword className="h-7 w-7 text-purple-500" />
+                        <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                            Code Battle
+                        </span>
+                    </a>
 
                     {/* Desktop */}
                     <div className="hidden md:flex items-center space-x-8">
                         {user ? (
                             <>
-                                {navItems.map((item) => (
-                                    <a
-                                        key={item.href}
-                                        href={item.href}
-                                        className="flex items-center space-x-1 text-gray-300 hover:text-white transition-colors"
-                                    >
-                                        <item.icon className="h-4 w-4" />
-                                        <span>{item.label}</span>
-                                    </a>
-                                ))}
-                                <div className="flex items-center space-x-4">
-                                    <div className="text-sm">
-                                        <div className="text-gray-300">
-                                            {user.name}
+                                {user.rank === "Admin" ? (
+                                    <>
+                                        {navItemsAdmin.map((item) => (
+                                            <a
+                                                key={item.href}
+                                                href={item.href}
+                                                className="flex items-center space-x-1 text-gray-300 hover:text-white transition-colors"
+                                            >
+                                                <item.icon className="h-4 w-4" />
+                                                <span>{item.label}</span>
+                                            </a>
+                                        ))}
+                                        <EditProfileDialog
+                                            open={isEdit}
+                                            onOpenChange={setIsEdit}
+                                            showButton={false}
+                                            user={user}
+                                            onSave={(data) =>
+                                                console.log(
+                                                    "Update user data:",
+                                                    data
+                                                )
+                                            }
+                                        />
+                                        <div
+                                            onClick={() => setIsEdit(true)}
+                                            className="flex items-center space-x-3 px-4 py-1 rounded-lg hover:bg-gray-800"
+                                        >
+                                            <Avatar className="ring-1 ring-pink-500 w-10 h-10 text-lg rounded-full bg-gradient-to-r from-purple-500 to-pink-500 font-bold">
+                                                <AvatarImage
+                                                    src={user.imageUrl}
+                                                    alt={user.name}
+                                                    className="object-cover"
+                                                />
+                                                <AvatarFallback className="text-white bg-gradient-to-r from-purple-500 to-pink-500">
+                                                    {getInitials(user.name)}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div className="text-left">
+                                                <div className="text-sm font-semibold text-white">
+                                                    {user.name}
+                                                </div>
+                                                <div className="text-xs text-purple-400">
+                                                    {user.rank}
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="text-purple-400">
-                                            {user.points} pts • {user.rank}
-                                        </div>
-                                    </div>
-                                    {/* <Button
-                                        onClick={() => {
-                                            Inertia.get("/auth/logout");
-                                        }}
-                                        variant="ghost"
-                                        size="sm"
-                                    >
-                                        <LogOut className="h-4 w-4" />
-                                    </Button> */}
-                                    <Link href={route("auth.logout")}>
-                                        <LogOut className="h-4 w-4" />
-                                    </Link>
-                                </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        {navItems.map((item) => (
+                                            <a
+                                                key={item.href}
+                                                href={item.href}
+                                                className="flex items-center space-x-1 text-gray-300 hover:text-white transition-colors"
+                                            >
+                                                <item.icon className="h-4 w-4" />
+                                                <span>{item.label}</span>
+                                            </a>
+                                        ))}
+                                        <Link
+                                            href="/profile"
+                                            className="flex items-center space-x-3 px-4 py-1 rounded-lg hover:bg-gray-800 transition-all"
+                                        >
+                                            <Avatar className="ring-1 ring-pink-500 w-10 h-10 text-lg rounded-full bg-gradient-to-r from-purple-500 to-pink-500 font-bold">
+                                                <AvatarImage
+                                                    src={user.imageUrl}
+                                                    alt={user.name}
+                                                    className="object-cover"
+                                                />
+                                                <AvatarFallback className="text-white bg-gradient-to-r from-purple-500 to-pink-500">
+                                                    {getInitials(user.name)}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div className="text-left">
+                                                <div className="text-sm font-semibold text-white">
+                                                    {user.name}
+                                                </div>
+                                                <div className="text-xs text-purple-400">
+                                                    {user.points} pts •{" "}
+                                                    {user.rank}
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </>
+                                )}
+                                <Link href={route("auth.logout")}>
+                                    <LogOut className="h-5 w-5 text-gray-400 hover:text-white" />
+                                </Link>
                             </>
                         ) : (
                             <div className="flex items-center space-x-4">
@@ -105,27 +173,100 @@ export default function Navbar({ user }) {
                     exit={{ opacity: 0, y: -20 }}
                     className="md:hidden bg-gray-900 border-t border-gray-800"
                 >
-                    <div className="px-2 pt-2 pb-3 space-y-1">
+                    <div className="px-4 pt-4 pb-4 space-y-1">
                         {user ? (
                             <>
-                                {navItems.map((item) => (
-                                    <a
-                                        key={item.href}
-                                        href={item.href}
-                                        className="flex items-center space-x-2 px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md"
-                                    >
-                                        <item.icon className="h-4 w-4" />
-                                        <span>{item.label}</span>
-                                    </a>
-                                ))}
-                                <div className="px-3 py-2 border-t border-gray-800 mt-2">
-                                    <div className="text-sm text-gray-300">
-                                        {user.name}
-                                    </div>
-                                    <div className="text-sm text-purple-400">
-                                        {user.points} pts • {user.rank}
-                                    </div>
-                                </div>
+                                {user.rank === "Admin" ? (
+                                    <>
+                                        {navItemsAdmin.map((item) => (
+                                            <a
+                                                key={item.href}
+                                                href={item.href}
+                                                className="flex items-center space-x-2 px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md"
+                                            >
+                                                <item.icon className="h-4 w-4" />
+                                                <span>{item.label}</span>
+                                            </a>
+                                        ))}
+                                        <div className="flex items-center space-x-3 px-3 py-3 rounded-md ">
+                                            <Avatar className="ring-1 ring-pink-500 w-10 h-10 text-lg rounded-full bg-gradient-to-r from-purple-500 to-pink-500 font-bold">
+                                                <AvatarImage
+                                                    src={user.imageUrl}
+                                                    alt={user.name}
+                                                    className="object-cover"
+                                                />
+                                                <AvatarFallback className="text-white bg-gradient-to-r from-purple-500 to-pink-500">
+                                                    {getInitials(user.name)}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div className="text-left">
+                                                <div className="text-sm text-white font-semibold">
+                                                    {user.name}
+                                                </div>
+                                                <div className="text-xs text-indigo-400">
+                                                    {user.rank}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="px-3">
+                                            <Link
+                                                href={route("auth.logout")}
+                                                className="flex items-center space-x-2 text-sm text-gray-400 hover:text-white mt-2"
+                                            >
+                                                <LogOut className="h-4 w-4" />
+                                                <span>Logout</span>
+                                            </Link>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        {navItems.map((item) => (
+                                            <a
+                                                key={item.href}
+                                                href={item.href}
+                                                className="flex items-center space-x-2 px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md"
+                                            >
+                                                <item.icon className="h-4 w-4" />
+                                                <span>{item.label}</span>
+                                            </a>
+                                        ))}
+                                        <Link
+                                            href="/profile"
+                                            className="flex items-center space-x-3 px-3 py-3 rounded-md hover:bg-gray-800"
+                                        >
+                                            <Avatar className="ring-1 ring-pink-500 w-10 h-10 text-lg rounded-full bg-gradient-to-r from-purple-500 to-pink-500 font-bold">
+                                                <AvatarImage
+                                                    src={user.imageUrl}
+                                                    alt={user.name}
+                                                    className="object-cover"
+                                                />
+                                                <AvatarFallback className="text-white bg-gradient-to-r from-purple-500 to-pink-500">
+                                                    {getInitials(user.name)}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div className="text-left">
+                                                <div className="text-sm text-white font-semibold">
+                                                    {user.name}
+                                                </div>
+                                                <div className="text-xs text-indigo-400">
+                                                    {user.points} pts •{" "}
+                                                    {user.rank}
+                                                </div>
+                                            </div>
+                                        </Link>
+
+                                        <div className="px-3">
+                                            <Link
+                                                href={route("auth.logout")}
+                                                className="flex items-center space-x-2 text-sm text-gray-400 hover:text-white mt-2"
+                                            >
+                                                <LogOut className="h-4 w-4" />
+                                                <span>Logout</span>
+                                            </Link>
+                                        </div>
+                                    </>
+                                )}
                             </>
                         ) : (
                             <>

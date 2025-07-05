@@ -19,7 +19,7 @@ class AuthController extends Controller
         if ($user && password_verify($credentials['password'], $user->password)) {
             auth()->login($user);
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard'); // Arahkan ke halaman utama atau dashboard
+            return redirect()->intended('/profile'); // Arahkan ke halaman utama atau dashboard
         }
         return back()->with('error', 'Login gagal, pastikan email dan password benar.');
     }

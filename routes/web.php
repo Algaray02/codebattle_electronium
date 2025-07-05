@@ -26,7 +26,25 @@ Route::get('/logout', [AuthController::class, 'logout'])
     ->name('auth.logout')
     ->middleware('auth');
 
+Route::get('/admin', function () {
+    return Inertia::render('admin/index');
+});
+Route::get('/profile', function () {
+    return Inertia::render('profile/index');
+});
+Route::get('/leaderboard', function () {
+    return Inertia::render('leaderboard/index');
+});
+Route::get('/result', function () {
+    return Inertia::render('result/index');
+});
+Route::get('/battle', function () {
+    return Inertia::render('battle/index');
+});
 
+Route::get('/make/question', function () {
+    return Inertia::render('admin/make-question/index');
+});
 //ini buat Home 
 Route::get('/', function () {
     return Inertia::render('index');

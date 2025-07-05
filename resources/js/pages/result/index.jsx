@@ -1,17 +1,24 @@
-import { motion } from "framer-motion"
-import { Link } from "@inertiajs/react"
-import { CheckCircle, XCircle, Clock, Trophy, ArrowRight, RotateCcw } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import Navbar from "@/components/fragments/navbar"
-import CodeEditor from "@/components/fragments/code-editor"
+import { motion } from "framer-motion";
+import { Link } from "@inertiajs/react";
+import {
+    CheckCircle,
+    XCircle,
+    Clock,
+    Trophy,
+    ArrowRight,
+    RotateCcw,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Navbar from "@/components/fragments/navbar";
+import CodeEditor from "@/components/fragments/code-editor";
 
 // Mock user data
 const user = {
     name: "Alex Johnson",
     points: 475,
     rank: "Epic",
-}
+};
 
 // Mock result data
 const result = {
@@ -55,47 +62,56 @@ const result = {
         aiSuggestion:
             "Your solution demonstrates a solid understanding of hash tables. To improve, consider adding input validation and handling edge cases more explicitly.",
     },
-}
+};
 
 export default function ResultPage() {
-    const successRate = (result.testCases.passed / result.testCases.total) * 100
+    const successRate =
+        (result.testCases.passed / result.testCases.total) * 100;
 
     const getResultIcon = () => {
         if (result.earnedPoints === result.maxPoints) {
-            return <CheckCircle className="h-16 w-16 text-green-400 mx-auto" />
+            return <CheckCircle className="h-16 w-16 text-green-400 mx-auto" />;
         }
         if (result.earnedPoints > 0) {
-            return <Trophy className="h-16 w-16 text-yellow-400 mx-auto" />
+            return <Trophy className="h-16 w-16 text-yellow-400 mx-auto" />;
         }
-        return <XCircle className="h-16 w-16 text-red-400 mx-auto" />
-    }
+        return <XCircle className="h-16 w-16 text-red-400 mx-auto" />;
+    };
 
     const getResultMessage = () => {
-        if (result.earnedPoints === result.maxPoints) return "Perfect Solution!"
-        if (result.earnedPoints > 0) return "Good Effort!"
-        return "Keep Practicing!"
-    }
+        if (result.earnedPoints === result.maxPoints)
+            return "Perfect Solution!";
+        if (result.earnedPoints > 0) return "Good Effort!";
+        return "Keep Practicing!";
+    };
 
     const getDifficultyColor = () => {
         switch (result.difficulty) {
             case "Easy":
-                return "bg-green-400"
+                return "bg-green-400/20 text-green-400";
             case "Medium":
-                return "bg-yellow-400"
+                return "bg-yellow-400/20 text-yellow-400";
             case "Hard":
-                return "bg-red-400"
+                return "bg-red-400/20 text-red-400";
             default:
-                return "bg-gray-400"
+                return "bg-gray-400/20 text-white";
         }
-    }
+    };
 
-    const ScoreCard = ({ icon: Icon, title, value, subtitle, color, delay }) => (
+    const ScoreCard = ({
+        icon: Icon,
+        title,
+        value,
+        subtitle,
+        color,
+        delay,
+    }) => (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay }}
         >
-            <Card className="bg-gray-900/50 border-gray-700 text-center">
+            <Card className="bg-gray-900/50 border-gray-700 text-center text-white">
                 <CardContent className="p-6">
                     <Icon className={`h-8 w-8 ${color} mx-auto mb-2`} />
                     <div className="text-2xl font-bold">{value}</div>
@@ -104,7 +120,7 @@ export default function ResultPage() {
                 </CardContent>
             </Card>
         </motion.div>
-    )
+    );
 
     const FeedbackList = ({ title, items, icon: Icon, color }) => (
         <Card className="bg-gray-900/50 border-gray-700">
@@ -117,7 +133,10 @@ export default function ResultPage() {
             <CardContent>
                 <ul className="space-y-2">
                     {items.map((item, index) => (
-                        <li key={index} className="text-gray-300 flex items-start">
+                        <li
+                            key={index}
+                            className="text-gray-300 flex items-start"
+                        >
                             <span className={`${color} mr-2`}>•</span>
                             {item}
                         </li>
@@ -125,7 +144,7 @@ export default function ResultPage() {
                 </ul>
             </CardContent>
         </Card>
-    )
+    );
 
     return (
         <div className="min-h-screen bg-black text-white">
@@ -146,12 +165,16 @@ export default function ResultPage() {
                         >
                             {getResultIcon()}
                         </motion.div>
-                        <h1 className="text-4xl font-bold mb-2">Battle Complete!</h1>
-                        <p className="text-xl text-gray-300">{getResultMessage()}</p>
+                        <h1 className="text-4xl font-bold mb-2">
+                            Battle Complete!
+                        </h1>
+                        <p className="text-xl text-gray-300">
+                            {getResultMessage()}
+                        </p>
                     </div>
 
                     {/* Score Summary */}
-                    <div className="grid md:grid-cols-4 gap-6 mb-8">
+                    <div className="grid md:grid-cols-4 gap-6 mb-8 ">
                         <ScoreCard
                             icon={Trophy}
                             title="Points Earned"
@@ -181,16 +204,24 @@ export default function ResultPage() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.4 }}
                         >
-                            <Card className="bg-gray-900/50 border-gray-700 text-center">
+                            <Card className="bg-gray-900/50 border-gray-700 text-center text-white">
                                 <CardContent className="p-6">
                                     <div
-                                        className={`h-8 w-8 mx-auto mb-2 rounded-full flex items-center justify-center ${getDifficultyColor()}`}
+                                        className={`h-8 w-8 mx-auto mb-2 flex rounded-lg items-center justify-center ${getDifficultyColor()}`}
                                     >
-                                        <span className="text-black font-bold text-sm">{result.difficulty[0]}</span>
+                                        <span className="font-bold text-sm">
+                                            {result.difficulty}
+                                        </span>
                                     </div>
-                                    <div className="text-2xl font-bold">{result.difficulty}</div>
-                                    <div className="text-gray-400">Difficulty</div>
-                                    <div className="text-sm text-gray-500">{result.problem}</div>
+                                    <div className="text-2xl font-bold">
+                                        {result.difficulty}
+                                    </div>
+                                    <div className="text-gray-400">
+                                        Difficulty
+                                    </div>
+                                    <div className="text-sm text-gray-500">
+                                        {result.problem}
+                                    </div>
                                 </CardContent>
                             </Card>
                         </motion.div>
@@ -203,12 +234,16 @@ export default function ResultPage() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8, delay: 0.5 }}
                         >
-                            <Card className="bg-gray-900/50 border-gray-700">
+                            <Card className="bg-gray-900/50 border-gray-700 text-white">
                                 <CardHeader>
                                     <CardTitle>Your Solution</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <CodeEditor language={result.language} initialCode={result.code} readOnly={true} />
+                                    <CodeEditor
+                                        language={result.language}
+                                        initialCode={result.code}
+                                        readOnly={true}
+                                    />
                                 </CardContent>
                             </Card>
                         </motion.div>
@@ -224,13 +259,17 @@ export default function ResultPage() {
                                 <CardHeader>
                                     <CardTitle className="flex items-center">
                                         <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-2">
-                                            <span className="text-sm font-bold">AI</span>
+                                            <span className="text-sm font-bold">
+                                                AI
+                                            </span>
                                         </div>
                                         AI Feedback
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <p className="text-gray-300">{result.feedback.aiSuggestion}</p>
+                                    <p className="text-gray-300">
+                                        {result.feedback.aiSuggestion}
+                                    </p>
                                 </CardContent>
                             </Card>
 
@@ -263,13 +302,19 @@ export default function ResultPage() {
                                 Try Another Battle
                             </Button>
                         </Link>
-                        <Link href="/dashboard">
-                            <Button variant="outline" className="border-gray-600 hover:bg-gray-800">
-                                Back to Dashboard
+                        <Link href="/profile">
+                            <Button
+                                variant="outline"
+                                className="border-gray-600 text-pink-600 hover:bg-gray-300 hover:text-pink-800"
+                            >
+                                Back to Profile
                             </Button>
                         </Link>
                         <Link href="/leaderboard">
-                            <Button variant="outline" className="border-gray-600 hover:bg-gray-800">
+                            <Button
+                                variant="outline"
+                                className="border-gray-600 text-pink-600 hover:bg-gray-300 hover:text-pink-800"
+                            >
                                 View Leaderboard
                             </Button>
                         </Link>
@@ -277,5 +322,5 @@ export default function ResultPage() {
                 </motion.div>
             </div>
         </div>
-    )
+    );
 }
