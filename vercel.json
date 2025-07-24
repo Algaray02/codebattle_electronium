@@ -10,22 +10,10 @@
         {
             "src": "/(.*)",
             "dest": "/api/index.php"
-        }
-    ],
-    "env": {
-        "APP_ENV": "production",
-        "APP_KEY": "base64:+IhCiZw4b2hnI5K5PucXwpWpcr9SmHFUb7dvnnqpBHQ=",
-        "APP_URL": "https://code-battle.vercel.app",
-        "GEMINI_API_KEY": "AIzaSyDlYLsIV58LD6Y4NZWU8O53lDYZ6X6fe7Y"
-    },
-    "builds": [
-        {
-            "src": "public/**",
-            "use": "@vercel/static"
         },
         {
-            "src": "api/index.php",
-            "use": "vercel-php@0.6.1"
+            "src": "/build/(.*)",
+            "dest": "/public/build/$1"
         }
     ],
     "outputDirectory": "public"
