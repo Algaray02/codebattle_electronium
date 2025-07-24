@@ -47,6 +47,7 @@ const THEMES = {
 
 export default function CodeEditor({
     language = "javascript",
+    setData,
     initialCode = "",
     onSubmit,
     onCodeChange,
@@ -100,6 +101,7 @@ export default function CodeEditor({
     const handleCodeChange = (newCode) => {
         setCode(newCode);
         onCodeChange?.(newCode);
+        setData("answer", newCode);
     };
 
     const handleCopy = async () => {

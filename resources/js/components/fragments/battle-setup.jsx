@@ -14,12 +14,12 @@ import Navbar from "./navbar";
 export default function BattleSetupScreen({
     user,
     selectedLanguage,
-    setSelectedLanguage,
     selectedDifficulty,
-    setSelectedDifficulty,
+    setData,
     handleStartBattle,
     languages = [],
     difficulties = [],
+    processing,
 }) {
     return (
         <div className="min-h-screen bg-black text-white">
@@ -53,18 +53,17 @@ export default function BattleSetupScreen({
                                 </label>
                                 <Select
                                     value={selectedLanguage}
-                                    onValueChange={setSelectedLanguage}
+                                    onValueChange={(value) =>
+                                        setData("language", value)
+                                    }
                                 >
                                     <SelectTrigger className="bg-gray-800 border-gray-600 text-white">
                                         <SelectValue placeholder="Select a language" />
                                     </SelectTrigger>
                                     <SelectContent className="bg-gray-800 border-gray-600 text-white">
                                         {languages.map((lang) => (
-                                            <SelectItem
-                                                key={lang.value}
-                                                value={lang.value}
-                                            >
-                                                {lang.label}
+                                            <SelectItem key={lang} value={lang}>
+                                                {lang}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -80,7 +79,8 @@ export default function BattleSetupScreen({
                                         <button
                                             key={diff.value}
                                             onClick={() =>
-                                                setSelectedDifficulty(
+                                                setData(
+                                                    "difficulty",
                                                     diff.value
                                                 )
                                             }
@@ -107,12 +107,16 @@ export default function BattleSetupScreen({
                             <Button
                                 onClick={handleStartBattle}
                                 disabled={
-                                    !selectedLanguage || !selectedDifficulty
+                                    !selectedLanguage ||
+                                    !selectedDifficulty ||
+                                    processing
                                 }
                                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 py-3"
                             >
                                 <Sword className="mr-2 h-5 w-5" />
-                                Start Battle
+                                {processing
+                                    ? "Prepare Battle..."
+                                    : "Start Battle"}
                             </Button>
                         </CardContent>
                     </Card>

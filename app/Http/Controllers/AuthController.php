@@ -33,13 +33,14 @@ class AuthController extends Controller
     {
         $data = $request->validated();
         $data['password'] = bcrypt($data['password']);
-        $data['role_id'] = 3; // role default player
-        $data['badge_id'] = null; // default tidak ada badge
+        // $data['role_id'] = 2; // role default player
+        $data['badge_id'] = 2; // default tidak ada badge
         $data['total_point'] = 0; // default point
 
         $user = User::create($data);
 
         if ($user) {
+            $user->assignRole(2);
             return redirect()->route('auth.login')->with('success', 'Akun berhasil dibuat, silakan login.');
         }
 

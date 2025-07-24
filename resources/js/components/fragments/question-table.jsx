@@ -26,6 +26,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Link, router } from "@inertiajs/react";
 
 const difficultyBadge = {
     easy: {
@@ -49,9 +50,14 @@ const languageBadge = {
     JavaScript: "text-yellow-500",
     Python: "text-blue-500",
     Java: "text-red-500",
-    Cpp: "text-purple-500",
-    Go: "text-cyan-500",
-    HTML: "text-orange-500",
+    "C++": "text-purple-500", // C++
+    "C#": "text-green-600", // C#
+    PHP: "text-indigo-600",
+    Ruby: "text-red-600",
+    Kotlin: "text-pink-500",
+    "Go (Golang)": "text-cyan-500", // Go (Golang)
+    Rust: "text-orange-700",
+    Dart: "text-blue-400",
 };
 
 export default function QuestionsTable({
@@ -78,6 +84,14 @@ export default function QuestionsTable({
         indexOfFirstItem,
         indexOfLastItem
     );
+
+    const handleEdit = (question) => {
+        router.visit(route("question.edit", question.id));
+    };
+
+    const handleDelete = (question) => {
+        router.delete(route("question.destroy", question.id));
+    };
 
     // Reset to first page when search changes
     const handleSearchChange = (e) => {
@@ -158,10 +172,12 @@ export default function QuestionsTable({
                         className="pl-10 bg-gray-800 border-gray-600 text-white w-64"
                     />
                 </div>
-                <Button className="bg-purple-600 hover:bg-purple-700">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Create Question
-                </Button>
+                <Link href="/admin/generate-question">
+                    <Button className="bg-purple-600 hover:bg-purple-700">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Create Question
+                    </Button>
+                </Link>
             </div>
 
             <Card className="bg-gray-900/50 border-gray-700">
@@ -204,7 +220,7 @@ export default function QuestionsTable({
                                             </td>
                                             <td className="p-4">
                                                 <p className="text-gray-400 text-sm line-clamp-1">
-                                                    {question.description}
+                                                    {question.question}
                                                 </p>
                                             </td>
                                             <td className="p-4 text-center">
@@ -262,6 +278,9 @@ export default function QuestionsTable({
                                                         variant="ghost"
                                                         size="sm"
                                                         className="text-yellow-400 hover:text-yellow-300 hover:bg-yellow-900/20"
+                                                        onClick={() =>
+                                                            handleEdit(question)
+                                                        }
                                                     >
                                                         <Edit className="h-4 w-4" />
                                                     </Button>
@@ -269,6 +288,11 @@ export default function QuestionsTable({
                                                         variant="ghost"
                                                         size="sm"
                                                         className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
+                                                        onClick={() =>
+                                                            handleDelete(
+                                                                question
+                                                            )
+                                                        }
                                                     >
                                                         <Trash2 className="h-4 w-4" />
                                                     </Button>

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BattleDifficulty;
+use App\Enums\BattleLanguage;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class QuestionController extends Controller
 {
@@ -12,31 +15,36 @@ class QuestionController extends Controller
         $search = $request->input('search');
         $questions = Question::when($search, function ($query, $search) {
             return $query->where('title', 'like', '%' . $search . '%')
-                         ->orWhere('question', 'like', '%' . $search . '%');
+                ->orWhere('question', 'like', '%' . $search . '%');
         })
-        ->orderByDesc('created_at')
-        ->paginate(10);
+            ->orderByDesc('created_at')
+            ->paginate(10);
 
-        return inertia('admin/questions/index', [
+
+        return inertia('admin/index', [
             'questions' => $questions,
             'search'    => $search,
+            'auth' => $request->user()->load('badge'),
         ]);
     }
 
     public function show($id)
     {
-        $question = Question::findOrFail($id);
-        return inertia('admin/questions/show', [
-            'question' => $question,
-        ]);
+        // $question = Question::findOrFail($id);
+        // return inertia('admin/questions/show', [
+        //     'question' => $question,
+        // ]);
     }
 
     public function edit($id)
     {
         $question = Question::findOrFail($id);
-        
-        return inertia('admin/questions/edit', [
+
+        return inertia('admin/questions/edit/index', [
             'question' => $question,
+            'auth' => auth()->user(),
+            'difficulties' => array_column(BattleDifficulty::cases(), 'value'),
+            'languages' => array_column(BattleLanguage::cases(), 'value'),
         ]);
     }
 
@@ -54,14 +62,13 @@ class QuestionController extends Controller
 
         $question->update($data);
 
-        return redirect()->route('question.index')->with('success', 'Question updated successfully.');
+        return redirect()->route('admin.dashboard.index')->with('success', 'Question updated successfully.');
     }
 
     public function destroy($id)
     {
-        $question = Question::findOrFail($id);
-        $question->delete();
+        Question::findOrFail($id)->delete();
 
-        return redirect()->route('question.index')->with('success', 'Question deleted successfully.');
+        return Inertia::location(route('admin.dashboard.index'));
     }
 }

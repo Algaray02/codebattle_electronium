@@ -20,78 +20,61 @@ const user = {
     rank: "Epic",
 };
 
-// Mock result data
-const result = {
-    problem: "Two Sum",
-    language: "JavaScript",
-    difficulty: "Easy",
-    maxPoints: 10,
-    earnedPoints: 8,
-    status: "Partially Correct",
-    timeSpent: "12:34",
-    testCases: {
-        passed: 7,
-        total: 10,
-    },
-    code: `function twoSum(nums, target) {
-    const map = new Map();
-    
-    for (let i = 0; i < nums.length; i++) {
-        const complement = target - nums[i];
-        
-        if (map.has(complement)) {
-            return [map.get(complement), i];
-        }
-        
-        map.set(nums[i], i);
-    }
-    
-    return [];
-}`,
-    feedback: {
-        strengths: [
-            "Good use of HashMap for O(1) lookup",
-            "Clean and readable code structure",
-            "Proper variable naming conventions",
-        ],
-        improvements: [
-            "Consider edge cases for empty arrays",
-            "Add input validation for better robustness",
-            "Handle case when no solution exists",
-        ],
-        aiSuggestion:
-            "Your solution demonstrates a solid understanding of hash tables. To improve, consider adding input validation and handling edge cases more explicitly.",
-    },
-};
+function timeSpent(publishedAt, updatedAt) {
+    const start =
+        publishedAt instanceof Date ? publishedAt : new Date(publishedAt);
+    const end = updatedAt instanceof Date ? updatedAt : new Date(updatedAt);
 
-export default function ResultPage() {
-    const successRate =
-        (result.testCases.passed / result.testCases.total) * 100;
+    // Selisih dalam milidetik
+    const diffMs = end - start;
+    if (diffMs <= 0) {
+        return "00:00";
+    }
+
+    // Ubah ke detik, lalu hitung menit & detik
+    const totalSeconds = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    // Pad dengan '0' agar selalu dua digit
+    const mm = String(minutes).padStart(2, "0");
+    const ss = String(seconds).padStart(2, "0");
+
+    return `${mm}:${ss}`;
+}
+
+export default function ResultPage({
+    user,
+    battle,
+    score,
+    feedback,
+    correctAnswer,
+}) {
+    const successRate = (score / battle.question.max_points) * 100;
 
     const getResultIcon = () => {
-        if (result.earnedPoints === result.maxPoints) {
+        if (score === battle.question.max_points) {
             return <CheckCircle className="h-16 w-16 text-green-400 mx-auto" />;
         }
-        if (result.earnedPoints > 0) {
+        if (score > 0) {
             return <Trophy className="h-16 w-16 text-yellow-400 mx-auto" />;
         }
         return <XCircle className="h-16 w-16 text-red-400 mx-auto" />;
     };
 
     const getResultMessage = () => {
-        if (result.earnedPoints === result.maxPoints)
-            return "Perfect Solution!";
-        if (result.earnedPoints > 0) return "Good Effort!";
+        if (score === battle.question.max_points) return "Perfect Solution!";
+        if (score > 0) return "Good Effort!";
         return "Keep Practicing!";
     };
 
     const getDifficultyColor = () => {
-        switch (result.difficulty) {
-            case "Easy":
+        switch (battle.question.difficulty) {
+            case "easy":
                 return "bg-green-400/20 text-green-400";
-            case "Medium":
+            case "medium":
                 return "bg-yellow-400/20 text-yellow-400";
-            case "Hard":
+            case "hard":
                 return "bg-red-400/20 text-red-400";
             default:
                 return "bg-gray-400/20 text-white";
@@ -131,20 +114,12 @@ export default function ResultPage() {
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <ul className="space-y-2">
-                    {items.map((item, index) => (
-                        <li
-                            key={index}
-                            className="text-gray-300 flex items-start"
-                        >
-                            <span className={`${color} mr-2`}>•</span>
-                            {item}
-                        </li>
-                    ))}
-                </ul>
+                <div className="text-gray-300 flex items-start">{items}</div>
             </CardContent>
         </Card>
     );
+
+    console.log(user);
 
     return (
         <div className="min-h-screen bg-black text-white">
@@ -174,12 +149,12 @@ export default function ResultPage() {
                     </div>
 
                     {/* Score Summary */}
-                    <div className="grid md:grid-cols-4 gap-6 mb-8 ">
+                    <div className="grid md:grid-cols-4 gap-6 mb-8">
                         <ScoreCard
                             icon={Trophy}
                             title="Points Earned"
-                            value={result.earnedPoints}
-                            subtitle={`out of ${result.maxPoints}`}
+                            value={score}
+                            subtitle={`out of ${battle.question.max_points}`}
                             color="text-yellow-400"
                             delay={0.1}
                         />
@@ -187,15 +162,18 @@ export default function ResultPage() {
                             icon={CheckCircle}
                             title="Success Rate"
                             value={`${successRate.toFixed(0)}%`}
-                            subtitle={`${result.testCases.passed}/${result.testCases.total} tests`}
+                            subtitle={`${score}/${battle.question.max_points} tests`}
                             color="text-green-400"
                             delay={0.2}
                         />
                         <ScoreCard
                             icon={Clock}
                             title="Time Spent"
-                            value={result.timeSpent}
-                            subtitle={`${result.difficulty} Problem`}
+                            value={timeSpent(
+                                battle.created_at,
+                                battle.updated_at
+                            )}
+                            subtitle={`${battle.question.difficulty} Problem`}
                             color="text-blue-400"
                             delay={0.3}
                         />
@@ -210,17 +188,17 @@ export default function ResultPage() {
                                         className={`h-8 w-8 mx-auto mb-2 flex rounded-lg items-center justify-center ${getDifficultyColor()}`}
                                     >
                                         <span className="font-bold text-sm">
-                                            {result.difficulty}
+                                            {battle.question.difficulty}
                                         </span>
                                     </div>
                                     <div className="text-2xl font-bold">
-                                        {result.difficulty}
+                                        {battle.question.difficulty}
                                     </div>
                                     <div className="text-gray-400">
                                         Difficulty
                                     </div>
                                     <div className="text-sm text-gray-500">
-                                        {result.problem}
+                                        {battle.question.title}
                                     </div>
                                 </CardContent>
                             </Card>
@@ -240,8 +218,8 @@ export default function ResultPage() {
                                 </CardHeader>
                                 <CardContent>
                                     <CodeEditor
-                                        language={result.language}
-                                        initialCode={result.code}
+                                        language={battle.question.language}
+                                        initialCode={battle.user_answer}
                                         readOnly={true}
                                     />
                                 </CardContent>
@@ -257,9 +235,9 @@ export default function ResultPage() {
                         >
                             <Card className="bg-gradient-to-r from-purple-900/20 to-pink-900/20 border-purple-500/30">
                                 <CardHeader>
-                                    <CardTitle className="flex items-center">
+                                    <CardTitle className="flex items-center text-purple-500">
                                         <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-2">
-                                            <span className="text-sm font-bold">
+                                            <span className="text-sm font-bold text-white">
                                                 AI
                                             </span>
                                         </div>
@@ -267,15 +245,15 @@ export default function ResultPage() {
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <p className="text-gray-300">
-                                        {result.feedback.aiSuggestion}
+                                    <p className="text-gray-300 text-justify">
+                                        {feedback}
                                     </p>
                                 </CardContent>
                             </Card>
-
+                            {/* 
                             <FeedbackList
-                                title="Strengths"
-                                items={result.feedback.strengths}
+                                title="Correct Answer"
+                                items={correctAnswer}
                                 icon={CheckCircle}
                                 color="text-green-400"
                             />
@@ -285,7 +263,7 @@ export default function ResultPage() {
                                 items={result.feedback.improvements}
                                 icon={ArrowRight}
                                 color="text-yellow-400"
-                            />
+                            /> */}
                         </motion.div>
                     </div>
 

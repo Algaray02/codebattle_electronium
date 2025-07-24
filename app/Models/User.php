@@ -58,4 +58,15 @@ class User extends Authenticatable
 
         return $this->hasRole($roles) || abort(403, 'This action is unauthorized.');
     }
+
+    public function badge()
+    {
+        // Ganti App\Models\Badge::class jika path model Anda berbeda
+        return $this->belongsTo(Badge::class);
+    }
+
+    public function battleStages()
+    {
+        return $this->hasMany(BattleStage::class);
+    }
 }

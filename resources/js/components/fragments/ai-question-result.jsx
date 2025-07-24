@@ -12,6 +12,7 @@ import {
     HardHat,
     AlertCircle,
     Trophy,
+    Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -47,8 +48,9 @@ export function AIQuestionResult({
     onRetry,
     isSaving,
     isLoading,
+    isEditing,
+    setIsEditing,
 }) {
-    const [isEditing, setIsEditing] = useState(false);
     const [editedQuestion, setEditedQuestion] = useState(question);
 
     const hasChanges =

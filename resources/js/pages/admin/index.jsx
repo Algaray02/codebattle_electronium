@@ -186,10 +186,11 @@ const questions = [
     })),
 ];
 
-export default function AdminPage() {
+export default function AdminPage({ questions: initialQuestions, auth }) {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedQuestion, setSelectedQuestion] = useState(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [questions, setQuestions] = useState(initialQuestions.data);
 
     const handleQuestionClick = (question) => {
         setSelectedQuestion(question);
@@ -198,7 +199,7 @@ export default function AdminPage() {
 
     return (
         <div className="min-h-screen bg-black">
-            <Navbar user={adminUser} />
+            <Navbar user={auth} />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <motion.div
@@ -268,7 +269,7 @@ export default function AdminPage() {
                                 transition={{ duration: 0.5 }}
                             >
                                 <QuestionsTable
-                                    questions={questions}
+                                    questions={questions || []}
                                     searchTerm={searchTerm}
                                     setSearchTerm={setSearchTerm}
                                     onQuestionClick={handleQuestionClick}

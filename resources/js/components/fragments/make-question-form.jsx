@@ -15,28 +15,18 @@ import {
     SelectItem,
 } from "@/components/ui/select";
 
-const languages = [
-    { value: "JavaScript", label: "JavaScript" },
-    { value: "Python", label: "Python" },
-    { value: "Java", label: "Java" },
-    { value: "Cpp", label: "C++" },
-    { value: "Csharp", label: "C#" },
-];
-
-const difficulties = [
-    { value: "easy", label: "Easy", points: 10, color: "text-green-400" },
-    { value: "medium", label: "Medium", points: 25, color: "text-yellow-400" },
-    { value: "hard", label: "Hard", points: 50, color: "text-red-400" },
-];
-
-export function MakeQuestionForm({ onSubmit, isLoading }) {
-    const [language, setLanguage] = useState("");
-    const [difficulty, setDifficulty] = useState("medium");
-    const [prompt, setPrompt] = useState("");
-
+export function MakeQuestionForm({
+    onSubmit,
+    isLoading,
+    difficulties,
+    languages,
+    data,
+    setData,
+    errors,
+}) {
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit({ language, difficulty, prompt });
+        onSubmit(data);
     };
 
     return (
@@ -55,8 +45,11 @@ export function MakeQuestionForm({ onSubmit, isLoading }) {
                                 Programming Language
                             </Label>
                             <Select
-                                value={language}
-                                onValueChange={setLanguage}
+                                value={data.language}
+                                onValueChange={(value) =>
+                                    setData("language", value)
+                                }
+                                required
                             >
                                 <SelectTrigger className="bg-gray-800 border-gray-600 text-white">
                                     <SelectValue placeholder="Select a language" />
@@ -64,14 +57,19 @@ export function MakeQuestionForm({ onSubmit, isLoading }) {
                                 <SelectContent className="bg-gray-800 border-gray-600 text-white">
                                     {languages.map((lang) => (
                                         <SelectItem
-                                            key={lang.value}
-                                            value={lang.value}
+                                            key={`lang-${lang}`}
+                                            value={lang}
                                         >
-                                            {lang.label}
+                                            {lang}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
+                            {errors.language && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.language}
+                                </p>
+                            )}
                         </div>
 
                         <div className="space-y-2">
@@ -81,28 +79,45 @@ export function MakeQuestionForm({ onSubmit, isLoading }) {
                             <div className="grid grid-cols-3 gap-4">
                                 {difficulties.map((diff) => (
                                     <button
-                                        key={diff.value}
+                                        key={`diff-${diff}`}
                                         type="button"
                                         onClick={() =>
-                                            setDifficulty(diff.value)
+                                            setData("difficulty", diff)
                                         }
                                         className={`p-4 rounded-lg border-2 transition-colors ${
-                                            difficulty === diff.value
+                                            data.difficulty === diff
                                                 ? "border-purple-500 bg-purple-900/20"
                                                 : "border-gray-600 bg-gray-800/50 hover:border-gray-500"
                                         }`}
                                     >
                                         <div
-                                            className={`text-lg font-semibold ${diff.color}`}
+                                            className={`text-lg font-semibold ${
+                                                diff === "easy"
+                                                    ? "text-green-400"
+                                                    : diff === "medium"
+                                                    ? "text-yellow-400"
+                                                    : "text-red-400"
+                                            }`}
                                         >
-                                            {diff.label}
+                                            {diff.charAt(0).toUpperCase() +
+                                                diff.slice(1)}
                                         </div>
                                         <div className="text-gray-400 text-sm">
-                                            {diff.points} points
+                                            {diff === "easy"
+                                                ? "10"
+                                                : diff === "medium"
+                                                ? "25"
+                                                : "50"}{" "}
+                                            points
                                         </div>
                                     </button>
                                 ))}
                             </div>
+                            {errors.difficulty && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.difficulty}
+                                </p>
+                            )}
                         </div>
 
                         <div className="space-y-2">
@@ -111,17 +126,24 @@ export function MakeQuestionForm({ onSubmit, isLoading }) {
                             </Label>
                             <Textarea
                                 id="prompt"
-                                value={prompt}
-                                onChange={(e) => setPrompt(e.target.value)}
+                                value={data.prompt}
+                                onChange={(e) =>
+                                    setData("prompt", e.target.value)
+                                }
                                 className="min-h-[120px] bg-gray-800 border-gray-600 text-white"
                                 placeholder="Describe what kind of problem you want to generate (e.g. 'array manipulation problem with O(n) solution')"
                             />
+                            {errors.prompt && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.prompt}
+                                </p>
+                            )}
                         </div>
 
                         <Button
                             type="submit"
                             className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 py-3"
-                            disabled={!language || isLoading}
+                            disabled={!data.language || isLoading}
                         >
                             {isLoading ? (
                                 <Sparkles className="h-5 w-5 mr-2 animate-pulse" />

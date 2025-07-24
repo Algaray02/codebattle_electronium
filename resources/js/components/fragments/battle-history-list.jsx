@@ -4,11 +4,11 @@ import { Clock, Code, Sword, Award } from "lucide-react";
 export function BattleHistoryList({ battles }) {
     const getDifficultyColor = (difficulty) => {
         switch (difficulty) {
-            case "Easy":
+            case "easy":
                 return "bg-green-400";
-            case "Medium":
+            case "medium":
                 return "bg-yellow-400";
-            case "Hard":
+            case "hard":
                 return "bg-red-400";
             default:
                 return "bg-gray-400";
@@ -29,25 +29,39 @@ export function BattleHistoryList({ battles }) {
                 <div className="space-y-4">
                     {battles.slice(1, 4).map((battle) => (
                         <div
-                            key={battle.id}
+                            key={battle.question.id}
                             className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg"
                         >
                             <div className="flex items-center space-x-4">
                                 <div
                                     className={`w-3 h-3 rounded-full ${getDifficultyColor(
-                                        battle.difficulty
+                                        battle.question.difficulty
                                     )}`}
                                 />
                                 <div>
                                     <h4 className="font-medium text-gray-100">
-                                        {battle.problem}
+                                        {battle.question.title}
                                     </h4>
                                     <p className="text-gray-400 text-sm">
-                                        {battle.language} • {battle.difficulty}
+                                        {battle.question.language} •{" "}
+                                        {battle.question.difficulty}
                                     </p>
                                     <div className="flex items-center text-xs text-gray-500 mt-1">
                                         <Clock className="h-3 w-3 mr-1" />
-                                        {battle.date} at {battle.time}
+                                        {new Date(
+                                            battle.updated_at
+                                        ).toLocaleDateString("id-ID", {
+                                            day: "numeric",
+                                            month: "long",
+                                            year: "numeric",
+                                        })}{" "}
+                                        At{" "}
+                                        {new Date(
+                                            battle.updated_at
+                                        ).toLocaleTimeString("id-ID", {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
                                     </div>
                                 </div>
                             </div>

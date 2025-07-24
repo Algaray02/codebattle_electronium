@@ -16,8 +16,12 @@ export default function Navbar({ user }) {
     ];
 
     const navItemsAdmin = [
-        { href: "/admin", label: "Dashboard", icon: User },
-        { href: "/make/question", label: "Create Question", icon: Wand2 },
+        { href: "/admin/dashboard", label: "Dashboard", icon: User },
+        {
+            href: "/admin/generate-question",
+            label: "Create Question",
+            icon: Wand2,
+        },
         { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
     ];
 
@@ -42,7 +46,7 @@ export default function Navbar({ user }) {
                     <div className="hidden md:flex items-center space-x-8">
                         {user ? (
                             <>
-                                {user.rank === "Admin" ? (
+                                {user.badge_id === 1 ? (
                                     <>
                                         {navItemsAdmin.map((item) => (
                                             <a
@@ -121,8 +125,8 @@ export default function Navbar({ user }) {
                                                     {user.name}
                                                 </div>
                                                 <div className="text-xs text-purple-400">
-                                                    {user.points} pts •{" "}
-                                                    {user.rank}
+                                                    {user.total_point} pts •{" "}
+                                                    {user.badge.name}
                                                 </div>
                                             </div>
                                         </Link>
@@ -212,7 +216,7 @@ export default function Navbar({ user }) {
                                         <div className="px-3">
                                             <Link
                                                 href={route("auth.logout")}
-                                                className="flex items-center space-x-2 text-sm text-gray-400 hover:text-white mt-2"
+                                                className="flex  items-center space-x-2 text-sm text-gray-400 hover:text-white mt-2"
                                             >
                                                 <LogOut className="h-4 w-4" />
                                                 <span>Logout</span>

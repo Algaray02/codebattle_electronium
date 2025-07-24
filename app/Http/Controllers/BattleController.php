@@ -9,6 +9,7 @@ use App\Models\BattleStage;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class BattleController extends Controller
@@ -19,11 +20,11 @@ class BattleController extends Controller
         $request->user()->authorizeRoles(['player']);
 
         // Ambil enum language & difficulty
-        $languages = array_map(fn($lang) => $lang->value, BattleLanguage::cases());
-        $difficulties = array_map(fn($diff) => $diff->value, BattleDifficulty::cases());
+        $languages = array_column(BattleLanguage::cases(), 'value');
+        $difficulties = array_column(BattleDifficulty::cases(), 'value');
 
         return Inertia::render('battle/index', [
-            'user' => $request->user(),
+            'user' => $request->user()->load('badge'),
             'languages' => $languages,
             'difficulties' => $difficulties,
             'canStartBattle' => true
@@ -53,7 +54,7 @@ class BattleController extends Controller
         ]);
 
         return Inertia::render('stage/index', [
-            'user'      => $request->user(),
+            'user'      => $request->user()->load('badge'),
             'question'  => $question,
             'battle_id' => $battle->id,
         ]);
@@ -67,31 +68,39 @@ class BattleController extends Controller
         ]);
 
         $battle = BattleStage::with('question')->findOrFail($request->input('battle_id'));
+        $user = $request->user();
 
         $aiResult = app('App\Services\AICodeGrader')->grade([
-            'question' => $battle->question->content,
-            'expected_answer' => $battle->question->answer ?? '',
+            'question' => $battle->question->question,
+            'correct_answer' => $battle->question->correct_answer,
             'user_answer' => $request->input('answer'),
             'difficulty' => $battle->question->difficulty,
             'language' => $battle->question->language,
         ]);
 
-        // Update battle stage dengan data hasil AI
-        $battle->update([
-            'user_answer'    => $request->input('answer'),
-            'correct_answer' => $aiResult['correct_answer'] ?? null,
-            'is_correct'     => $aiResult['is_correct'],
-            'score'          => $aiResult['score'],
-            'feedback'       => $aiResult['feedback'],
-            'status'         => $aiResult['is_correct'] ? BattleStatus::COMPLETED->value : BattleStatus::TIMEOUT->value,
-        ]);
+        DB::transaction(function () use ($battle, $user, $aiResult, $request) {
+            // 1. Update battle stage dengan data hasil AI
+            $battle->update([
+                'user_answer'  => $request->input('answer'),
+                'is_correct'   => $aiResult['is_correct'],
+                'score'        => $aiResult['score'],
+                'feedback'     => $aiResult['feedback'],
+                'status'       => $aiResult['is_correct'] ? BattleStatus::COMPLETED->value : BattleStatus::TIMEOUT->value,
+            ]);
+
+
+            if ($aiResult['score'] > 0) {
+                $user->increment('total_point', $aiResult['score']);
+            }
+        });
 
         return Inertia::render('result/index', [
+            'user'      => $request->user()->load('badge'),
             'battle'    => $battle->fresh('question'),
             'isCorrect' => $aiResult['is_correct'],
             'score'     => $aiResult['score'],
             'feedback'  => $aiResult['feedback'],
-            'correctAnswer' => $aiResult['correct_answer'],
+            'correctAnswer' => $battle->question->correct_answer,
         ]);
     }
 }

@@ -1,4 +1,3 @@
-// components/fragments/editable-avatar.jsx
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function EditableAvatar({ name, imageUrl }) {

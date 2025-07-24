@@ -1,4 +1,3 @@
-// components/fragments/problem-list.jsx
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Sword } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,7 +30,7 @@ export default function ProblemList({
                             {selectedProblem.difficulty}
                         </span>
                         <span className="text-sm text-yellow-400">
-                            {selectedProblem.points} points
+                            {selectedProblem.max_points} points
                         </span>
                     </div>
                 </CardHeader>
@@ -41,10 +40,10 @@ export default function ProblemList({
                             Description
                         </h3>
                         <p className="text-gray-200 whitespace-pre-line">
-                            {selectedProblem.description}
+                            {selectedProblem.question}
                         </p>
                     </div>
-                    <div>
+                    {/* <div>
                         <h3 className="font-semibold mb-2 text-white">
                             Examples
                         </h3>
@@ -87,7 +86,7 @@ export default function ProblemList({
                                 )
                             )}
                         </ul>
-                    </div>
+                    </div> */}
                 </CardContent>
             </Card>
         );
@@ -150,11 +149,11 @@ export default function ProblemList({
 
 function getDifficultyColor(difficulty) {
     switch (difficulty) {
-        case "Easy":
+        case "easy":
             return "bg-green-900/20 text-green-400";
-        case "Medium":
+        case "medium":
             return "bg-yellow-900/20 text-yellow-400";
-        case "Hard":
+        case "hard":
             return "bg-red-900/20 text-red-400";
         default:
             return "bg-gray-900/20 text-gray-200";

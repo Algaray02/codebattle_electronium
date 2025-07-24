@@ -39,7 +39,7 @@ export default function QuestionDialog({ question, open, onOpenChange }) {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(question.correctAnswer);
+        navigator.clipboard.writeText(question.correct_answer);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
@@ -76,7 +76,7 @@ export default function QuestionDialog({ question, open, onOpenChange }) {
                                     </span>
                                 </div>
                                 <div className="text-purple-400 text-sm">
-                                    {question.points} points
+                                    {question.max_points} points
                                 </div>
                             </div>
                         </div>
@@ -91,7 +91,7 @@ export default function QuestionDialog({ question, open, onOpenChange }) {
                         <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
                             <div className="max-h-[200px] overflow-y-auto">
                                 <p className="whitespace-pre-line text-gray-300">
-                                    {question.description}
+                                    {question.question}
                                 </p>
                             </div>
                         </div>
@@ -124,7 +124,7 @@ export default function QuestionDialog({ question, open, onOpenChange }) {
                         <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
                             <div className="max-h-[200px] overflow-y-auto">
                                 <pre className="font-mono text-sm text-gray-300">
-                                    <code>{question.correctAnswer}</code>
+                                    <code>{question.correct_answer}</code>
                                 </pre>
                             </div>
                         </div>

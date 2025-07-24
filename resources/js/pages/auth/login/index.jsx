@@ -12,7 +12,7 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const { data, setData, errors, processing, post } = useForm({
+    const { data, setData, errors, post } = useForm({
         email: "",
         password: "",
     });
