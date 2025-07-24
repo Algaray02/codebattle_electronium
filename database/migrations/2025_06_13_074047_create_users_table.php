@@ -13,10 +13,6 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('role_id')
-                ->nullable()
-                ->constrained('roles')
-                ->nullOnDelete();
             $table->foreignId('badge_id')
                 ->nullable()
                 ->constrained('badges')

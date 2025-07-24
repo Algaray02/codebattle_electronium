@@ -19,7 +19,12 @@ class AuthController extends Controller
         if ($user && password_verify($credentials['password'], $user->password)) {
             auth()->login($user);
             $request->session()->regenerate();
-            return redirect()->intended('/profile'); // Arahkan ke halaman utama atau dashboard
+
+            if ($user->hasRole('admin')) {
+                return redirect()->intended('/admin/dashboard'); // Arahkan ke halaman admin
+            }
+
+            return redirect()->intended('/profile'); // Arahkan ke halaman profil
         }
         return back()->with('error', 'Login gagal, pastikan email dan password benar.');
     }

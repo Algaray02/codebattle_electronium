@@ -1,12 +1,15 @@
 <?php
 
+use App\Http\Controllers\Admin\BattleMonitorController;
+use App\Http\Controllers\Admin\MakeQuestionController;
+
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BattleController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 
-use App\Http\Controllers\Front\{
-    BadgeController as FrontBadgeController
-};
-
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\SubmissionController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -21,65 +24,81 @@ Route::middleware('guest')
         Route::post('/register', [AuthController::class, 'register'])->name('register'); // POST /auth/register untuk proses
     });
 
-// Route untuk logout (hanya untuk user yang sudah login)
-Route::get('/logout', [AuthController::class, 'logout'])
-    ->name('auth.logout')
-    ->middleware('auth');
-
-Route::get('/admin', function () {
-    return Inertia::render('admin/index');
-});
-Route::get('/profile', function () {
-    return Inertia::render('profile/index');
-});
-Route::get('/leaderboard', function () {
-    return Inertia::render('leaderboard/index');
-});
-Route::get('/result', function () {
-    return Inertia::render('result/index');
-});
-Route::get('/battle', function () {
-    return Inertia::render('battle/index');
-});
-
-Route::get('/make/question', function () {
-    return Inertia::render('admin/make-question/index');
-});
 //ini buat Home 
 Route::get('/', function () {
     return Inertia::render('index');
 });
 
-// ini dashboard
-Route::get('/dashboard', function () {
-    return Inertia::render('dashboard/index');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-// use middleware khusus untuk role superAdmin dan admin
+// PLAYER ROUTES
 Route::group([
-    'middleware' => ['auth', 'role:superAdmin, admin'],
-    'prefix' => 'admin',
-    'name' => 'profile.',
+    'middleware' => ['auth'],
+    'prefix' => 'battle',
+    'name' => 'battle.',
 ], function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('edit');
-    Route::post('/profile', [ProfileController::class, 'update'])->name('update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('destroy');
+    Route::get('/', [BattleController::class, 'index'])->name('index');
+    Route::post('/{id}/stage', [BattleController::class, 'start'])->name('start');
+    Route::post('/submit', [BattleController::class, 'submit'])->name('submit');
 });
 
 // buat semua yang sudah login
 Route::group([
-    'middleware' => ['auth'],
+    'middleware' => ['auth', 'verified'],
     'prefix' => 'profile',
     'name' => 'profile.',
 ], function () {
-    Route::get('/show', [ProfileController::class, 'show'])->name('show');
+    Route::get('/', [ProfileController::class, 'show'])->name('show');
     Route::post('/update', [ProfileController::class, 'updatePlayer'])->name('updatePlayer');
 });
 
-// contoh untuk nampilin info badge di landing page
-Route::get('/badge', [FrontBadgeController::class, 'index'])->name('index');
+// ADMIN ROUTES
+Route::group([
+    'middleware' => ['auth'],
+    'prefix' => 'admin',
+    'name' => 'battle.',
+], function () {
+    Route::get('/battle', [BattleMonitorController::class, 'index'])->name('index');
+});
 
-// Badges page
-// Route::get('/badges', [BadgeController::class, 'index'])
-//     ->middleware(['auth'])
-//     ->name('badges.index');
+Route::group([
+    'middleware' => ['auth'],
+    'prefix' => 'admin',
+    'name' => 'dashboard.',
+], function () {
+    // Untuk index admin
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('index');
+    Route::delete('/{id}', [DashboardController::class, 'destroyProfile'])->name('profile.destroy');
+});
+
+Route::group([
+    'middleware' => ['auth'],
+    'prefix' => 'admin/generate-question',
+    'name' => 'make-question.',
+], function () {
+    Route::get('/', [MakeQuestionController::class, 'index'])->name('index');
+    Route::post('/', [MakeQuestionController::class, 'generateQuestion'])->name('generate');
+});
+
+Route::group([
+    'middleware' => ['auth'],
+    'prefix' => 'admin/questions',
+    'name' => 'question.',
+], function () {
+    Route::get('/', [QuestionController::class, 'index'])->name('index');
+    Route::get('/{id}', [QuestionController::class, 'show'])->name('show');
+    Route::get('/{id}/edit', [QuestionController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [QuestionController::class, 'update'])->name('update');
+    Route::delete('/{id}', [QuestionController::class, 'destroy'])->name('destroy');
+});
+
+Route::get('/leaderboard', function () {
+    return Inertia::render('leaderboard/index');
+})->middleware(['auth', 'verified'])->name('leaderboard');
+
+Route::get('/result', function () {
+    return Inertia::render('result/index');
+})->middleware(['auth', 'verified'])->name('result');
+
+// Route untuk logout (hanya untuk user yang sudah login)
+Route::get('/logout', [AuthController::class, 'logout'])
+    ->name('auth.logout')
+    ->middleware('auth');
